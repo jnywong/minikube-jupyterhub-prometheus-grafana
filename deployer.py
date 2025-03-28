@@ -25,7 +25,6 @@ def deploy(type, namespace, values_files, debug, dry_run):
         "upgrade",
         "--install",
         "--create-namespace",
-        "--wait",
         f"--namespace={namespace}",
         namespace,
         helm_chart,
