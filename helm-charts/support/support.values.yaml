@@ -9,4 +9,26 @@ prometheus:
       - nodes=[*]
       - services=[app, component]
     metricAnnotationsAllowList:
-      - pods=[hub.jupyter.org/username]      
+      - pods=[hub.jupyter.org/username]
+  networkPolicy:
+    enabled: true
+  server:
+    podLabels:
+      hub.jupyter.org/network-access-hub: "true"
+
+grafana:
+  adminUser: admin
+  adminPassword: admin
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        # Automatically add the prometheus server in the same namespace as the grafana as a datasource
+        - name: prometheus
+          orgId: 1
+          type: prometheus
+          # This is the name of the kubernetes service exposed by the prometheus server
+          url: http://support-prometheus-server
+          access: proxy
+          isDefault: false
+          editable: false

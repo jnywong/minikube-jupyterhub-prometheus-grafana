@@ -1,5 +1,28 @@
-hub:
-  config:
-    Authenticator:
-      admin_users:
-        - jnywong
+jupyterhub:
+  hub:
+    config:
+      Authenticator:
+        admin_users:
+          - jnywong
+      JupyterHub:
+        authenticate_prometheus: false          
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/hub/metrics"
+    networkPolicy:
+      enabled: true
+      interNamespaceAccessLabels: accept
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  app: jupyterhub
+                  component: hub
+          ports:
+            - port: 8081
+              protocol: TCP
+  prePuller:
+    continuous:
+      enabled: false
+  
