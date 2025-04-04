@@ -1,6 +1,6 @@
-# local-dev
+# minikube-jupyterhub-prometheus-grafana
 
-Local development environment for minikube running JupyterHub.
+Local development environment for minikube running JupyterHub, Prometheus and Grafana.
 
 [Kubernetes on minikube (for learning and development only) — Zero to JupyterHub with Kubernetes  documentation](https://z2jh.jupyter.org/en/stable/kubernetes/minikube/step-zero-minikube.html)
 
