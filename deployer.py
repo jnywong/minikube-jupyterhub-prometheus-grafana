@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import subprocess
+import shutil
 import tempfile
 from contextlib import ExitStack, contextmanager
 from pathlib import Path
@@ -12,38 +13,72 @@ from ruamel.yaml.scanner import ScannerError
 yaml = YAML(typ="safe", pure=True)
 
 
-def deploy(type, namespace, values_files, debug, dry_run):
-    if type == "support":
-        helm_chart = Path(__file__).parent.joinpath("helm-charts/support")
-    elif type == "app":
-        helm_chart = Path(__file__).parent.joinpath("helm-charts/app")
-    else:
-        raise ValueError(f"Unknown type: {type}")
+def deploy(type, namespace, config, debug, dry_run):
+    if type == "support" or type == "app":
+        helm_chart = Path(__file__).parent.joinpath(f"helm-charts/{type}")
+        cmd = [
+            "helm",
+            "upgrade",
+            "--install",
+            "--create-namespace",
+            f"--namespace={namespace}",
+            namespace,
+            helm_chart,
+        ]
+        if dry_run:
+            cmd.append("--dry-run")
+        if debug:
+            cmd.append("--debug")
 
-    cmd = [
-        "helm",
-        "upgrade",
-        "--install",
-        "--create-namespace",
-        f"--namespace={namespace}",
-        namespace,
-        helm_chart,
-    ]
-    if dry_run:
-        cmd.append("--dry-run")
-    if debug:
-        cmd.append("--debug")
+        if config:
+            val_files_str = [str(file) for file in config]
+            for val_file in val_files_str:
+                cmd.append(f"--values={val_file}")
 
-    if values_files:
-        val_files_str = [str(file) for file in values_files]
-        for val_file in val_files_str:
-            cmd.append(f"--values={val_file}")
-
+                print(f"Running {' '.join([str(c) for c in cmd])}")
+                subprocess.check_call(cmd)
+        else:
             print(f"Running {' '.join([str(c) for c in cmd])}")
             subprocess.check_call(cmd)
+
+    elif type == "grafana":
+        grafana_url = "http://localhost:3000"
+        dashboards_dir = config
+        deploy_env = os.environ.copy()
+        # sops_age_key = deploy_env.get("SOPS_AGE_KEY")  # FIX: decrypt sops key
+
+        p1 = subprocess.Popen(
+            [
+                'sops',
+                'decrypt',
+                'helm-charts/support/enc-grafana-token.secret.yaml',
+            ],
+            stdout=subprocess.PIPE,
+        )
+        p2 = subprocess.Popen(
+            [
+                'sed',
+                '-r',
+                's/(grafana_token: )//'
+            ],
+            stdin=p1.stdout,
+            stdout=subprocess.PIPE,
+        )
+        p1.stdout.close()
+        grafana_token = p2.communicate()[0].decode('utf-8').strip()
+        deploy_env.update({"GRAFANA_TOKEN": grafana_token})
+
+        try:
+            print(f"Deploying grafana dashboards to {grafana_url}...")
+            subprocess.check_call(
+                ["./deploy.py", grafana_url],
+                env=deploy_env,
+                cwd=f"{dashboards_dir}",
+            )
+        except Exception as e:
+            print(f"Failed to deploy Grafana dashboards: {str(e)}")
     else:
-        print(f"Running {' '.join([str(c) for c in cmd])}")
-        subprocess.check_call(cmd)
+        raise ValueError(f"Unknown type: {type}")
 
 
 def main():
@@ -54,8 +89,14 @@ def main():
     parser.add_argument(
         "--namespace",
         type=str,
-        help="Namespace to deploy to. Choose from support/staging/prod",
+        help="Namespace to deploy to. Choose from support/app",
     )
+    parser.add_argument(
+        "--grafana_dashboards",
+        type=str,
+        default="../grafana-dashboards",
+        help="Directory containing Grafana dashboards config",
+    )    
     parser.add_argument(
         "--dry-run", action="store_true", help="Perform a dry run"
     )
@@ -64,26 +105,26 @@ def main():
     )
 
     args = parser.parse_args()
-    key_path = Path(__file__).parent.joinpath(
-        "helm-charts/enc-deploy-credentials.secret.json"
-    )
+
     if args.type == "support":
         helm_chart = Path(__file__).parent.joinpath("helm-charts/support")
-        values_files = [
+        config = [
             helm_chart.joinpath(f"{args.namespace}.values.yaml"),
         ]
     elif args.type == "app":
         helm_chart = Path(__file__).parent.joinpath("helm-charts/app")
-        values_files = [
+        config = [
             helm_chart.joinpath("app.values.yaml"),
         ]
+    elif args.type == "grafana":
+        config = args.grafana_dashboards
     else:
         raise ValueError(f"Unknown type: {args.type}")
 
     deploy(
         args.type,
         args.namespace,
-        values_files,
+        config,
         args.debug,
         args.dry_run,
     )
