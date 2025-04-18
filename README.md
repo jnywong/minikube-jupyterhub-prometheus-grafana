@@ -27,16 +27,26 @@ To test that the cluster is running, run:
 kubectl get node
 ```
 
-## Configure helm chart
+## Add helm chart repositories
 
-`config.yaml` is the chart configuration file used to override the default values in the helm charts.
-
-## Install JupyterHub
-
-1. Get the latest chart
+1. Get the JupyterHub helm chart
 
 ```bash
 helm repo add jupyterhub https://hub.jupyter.org/helm-chart/
+helm repo update
+```
+
+1. Get the Prometheus helm chart
+
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+```
+
+1. Get the Grafana helm chart
+
+```bash
+helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 ```
 
@@ -59,22 +69,7 @@ helm list --all-namespaces
 helm -n support uninstall test-release
 ```
 
-## Install Prometheus
-
-```bash
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-```
-
-```bash
-helm upgrade --cleanup-on-fail \
-  --install test-release prometheus-community/prometheus \
-  --namespace support \
-  --create-namespace \
-  --values config.yaml
-```
-
-## Install Grafana
+## Configure Grafana
 
 ### Encrypt Grafana token with sops and age
 
