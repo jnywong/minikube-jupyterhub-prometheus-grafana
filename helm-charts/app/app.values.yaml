@@ -5,7 +5,16 @@ jupyterhub:
         admin_users:
           - jnywong
       JupyterHub:
-        authenticate_prometheus: false          
+        authenticate_prometheus: false
+    services:
+      jupyterhub-groups-exporter: {}
+    loadRoles:
+      jupyterhub-groups-exporter:
+        services:
+          - jupyterhub-groups-exporter
+        scopes:
+          - users
+          - groups
     service:
       annotations:
         prometheus.io/scrape: "true"
@@ -15,14 +24,17 @@ jupyterhub:
       interNamespaceAccessLabels: accept
       ingress:
         - from:
-            - podSelector:
-                matchLabels:
-                  app: jupyterhub
-                  component: hub
+          - podSelector:
+              matchLabels:
+                app: jupyterhub
+                component: hub
+                hub.jupyter.org/network-access-hub: "true"
           ports:
             - port: 8081
               protocol: TCP
   prePuller:
     continuous:
       enabled: false
-  
+
+jupyterhub-groups-exporter:
+  enabled: true
