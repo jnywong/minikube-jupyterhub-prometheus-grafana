@@ -38,3 +38,6 @@ jupyterhub:
 
 jupyterhub-groups-exporter:
   enabled: true
+  config:
+    groupsExporter:
+      update_exporter_interval: 10

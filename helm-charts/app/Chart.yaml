@@ -9,3 +9,7 @@ dependencies:
   - name: jupyterhub
     version: 4.1.0
     repository: https://hub.jupyter.org/helm-chart/
+  - name: jupyterhub-groups-exporter
+    version: 0.0.1-0.dev.git.69.h881fb0a
+    repository: https://2i2c.org/jupyterhub-groups-exporter
+    condition: jupyterhub-groups-exporter.enabled
