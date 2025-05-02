@@ -15,7 +15,7 @@ kubectl config current-context
 ```bash
 minikube start \
 --kubernetes-version stable \
---nodes 2 \
+--nodes 1 \
 --cpus 2 \
 --memory 2000 \
 --cni calico
@@ -49,6 +49,20 @@ helm repo update
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 ```
+
+1. Locally install the helm-chart for jupyterhub-groups-exporter (arm64, make sure to update image and tag in values chart). Make sure that you follow local build instructions in [Pushing images | minikubeminikube](https://minikube.sigs.k8s.io/docs/handbook/pushing/#1-pushing-directly-to-the-in-cluster-docker-daemon-docker-env)
+
+```bash
+helm install -n app jupyterhub-groups-exporter ../jupyterhub-groups-exporter/helm/jupyterhub-groups-exporter/
+```
+
+and use
+
+```bash
+helm upgrade -n app jupyterhub-groups-exporter ../jupyterhub-groups-exporter/helm/jupyterhub-groups-exporter/
+```
+
+to upgrade the chart thereafter.
 
 1. Fetch chart dependencies
 
