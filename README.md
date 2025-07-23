@@ -59,7 +59,7 @@ helm dep build ./helm-charts/<app/support>
 1. Update any on-disk dependencies if required
 
 ```bash
-helm dependency update ./helm-charts/<app/support>
+helm dep up ./helm-charts/<app/support>
 ```
 
 1. Install the charts and deploy
