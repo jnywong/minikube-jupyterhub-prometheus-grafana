@@ -50,24 +50,23 @@ helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
 ```
 
-1. Locally install the helm-chart for jupyterhub-groups-exporter (arm64, make sure to update image and tag in values chart). Make sure that you follow local build instructions in [Pushing images | minikubeminikube](https://minikube.sigs.k8s.io/docs/handbook/pushing/#1-pushing-directly-to-the-in-cluster-docker-daemon-docker-env)
+1. Install the helm-chart for `jupyterhub-groups-exporter`
 
 ```bash
-helm install -n app jupyterhub-groups-exporter ../jupyterhub-groups-exporter/helm/jupyterhub-groups-exporter/
+helm repo add jupyterhub-groups-exporter https://2i2c.org/jupyterhub-groups-exporterhelm/jupyterhub-groups-exporter/
+helm repo update
 ```
-
-and use
-
-```bash
-helm upgrade -n app jupyterhub-groups-exporter ../jupyterhub-groups-exporter/helm/jupyterhub-groups-exporter/
-```
-
-to upgrade the chart thereafter.
 
 1. Fetch chart dependencies
 
 ```bash
- helm dep build ./helm-charts/<app/support>
+helm dep build ./helm-charts/<app/support>
+```
+
+1. Update any on-disk dependencies if required
+
+```bash
+helm dependency update ./helm-charts/<app/support>
 ```
 
 1. Install the charts and deploy
