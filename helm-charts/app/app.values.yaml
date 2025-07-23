@@ -41,3 +41,7 @@ jupyterhub-groups-exporter:
   config:
     groupsExporter:
       update_exporter_interval: 10
+      allowed_groups:
+        - group-0
+        - group-1
+      default_group: "test"
