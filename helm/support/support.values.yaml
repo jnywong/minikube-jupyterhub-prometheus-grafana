@@ -32,9 +32,15 @@ grafana:
           access: proxy
           isDefault: false
           editable: false
+<<<<<<< HEAD:helm/support/support.values.yaml
         - name: jupyterhub-cost-monitoring
           type: yesoreyeram-infinity-datasource
           isDefault: false
           editable: true
   plugins:
     - yesoreyeram-infinity-datasource
+=======
+
+cost-monitoring:
+  enabled: true
+>>>>>>> 485b324 (Local install of cost-monitoring):helm-charts/support/support.values.yaml
