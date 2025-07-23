@@ -32,3 +32,6 @@ grafana:
           access: proxy
           isDefault: false
           editable: false
+
+cost-monitoring:
+  enabled: true
