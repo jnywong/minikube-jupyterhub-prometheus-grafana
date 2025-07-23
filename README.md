@@ -15,7 +15,7 @@ kubectl config current-context
 ```bash
 minikube start \
 --kubernetes-version stable \
---nodes 2 \
+--nodes 1 \
 --cpus 2 \
 --memory 2000 \
 --cni calico
@@ -53,7 +53,13 @@ helm repo update
 1. Fetch chart dependencies
 
 ```bash
- helm dep build ./helm-charts/<app/support>
+helm dep build ./helm-charts/<app/support>
+```
+
+1. Update any on-disk dependencies if required
+
+```bash
+helm dependency update ./helm-charts/<app/support>
 ```
 
 1. Install the charts and deploy
@@ -70,6 +76,8 @@ helm -n support uninstall test-release
 ```
 
 ## Configure Grafana
+
+The default Grafana username and password is `admin`. You will be asked to change the password on first login.
 
 ### Encrypt Grafana token with sops and age
 
@@ -97,7 +105,7 @@ sops decrypt enc-grafana-token.secret.yaml
 
 ### Deploy Grafana dashboards
 
-Ensure that you have set the environment variable `SOPS_AGE_KEY` to the age secret key in order to decrypt the Grafana token.
+Ensure that you have set the environment variable `SOPS_AGE_KEY` to the age secret key in order to decrypt the Grafana token, or you can pass the file location of the `key.txt` file to `SOPS_AGE_KEY_FILE`.
 
 ```bash
 python3 deployer.py grafana
@@ -136,7 +144,7 @@ then visit [http://localhost:3000](http://localhost:3000)
 The single user server pods will spin up in the same namespace as above
 
 ```bash
-$ k -n support get pod
+$ k -n app get pod
 NAME                              READY   STATUS    RESTARTS   AGE
 hub-5847b8cfdc-46mn9              1/1     Running   0          12m
 jupyter-jnywong                   1/1     Running   0          105s
