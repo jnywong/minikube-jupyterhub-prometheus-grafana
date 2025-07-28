@@ -79,7 +79,7 @@ k -n support create secret generic aws-access --from-literal=AWS_ACCESS_KEY_ID=<
 
 ### Local docker build
 
-1. Build a local docker image in the `jupyterhub-cost-monitoring` folder:
+1. Build a local docker image with the minikube Docker daemon with the DockerFile given in the `jupyterhub-cost-monitoring` folder:
 
 ```bash
 docker build -t jupyterhub-cost-monitoring:<tag-name> .
@@ -121,6 +121,8 @@ jupyterhub-cost-monitoring:
 helm package ../jupyterhub-cost-monitoring/helm-charts --destination ./helm-charts/support/charts
 ```
 
+Remember to repeat this step if you make changes to the `jupyterhub-cost-monitoring` project.
+
 1. Install the charts and deploy with the helper script `deployer.py`:
 
 ```bash
@@ -134,6 +136,38 @@ python3 deployer.py <app/support> --namespace=<app/support>
 > helm list --all-namespaces
 > helm -n support uninstall test-release
 > ```
+
+## Install published helm chart of JupyterHub Cost Monitoring
+
+You can install the published helm chart by running the following command:
+
+```bash
+helm repo add jupyterhub-cost-monitoring https://2i2c.org/jupyterhub-cost-monitoring/
+helm repo update
+```
+
+Make sure that the `Chart.yaml` file in the `helm-charts/support` directory has the following dependency:
+
+```yaml
+dependencies:
+  - name: jupyterhub-cost-monitoring
+    version: "<version-number>"
+    repository: "https://2i2c.org/jupyterhub-cost-monitoring/"
+    condition: jupyterhub-cost-monitoring.enabled
+```
+
+Then install the chart with:
+
+```bash
+helm dep up ./helm-charts/support
+helm dep build ./helm-charts/support
+```
+
+before deploying the chart with the helper script `deployer.py`:
+
+```bash
+python3 deployer.py support --namespace=support
+```
 
 ## Configure Grafana
 
