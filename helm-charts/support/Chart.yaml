@@ -12,7 +12,7 @@ dependencies:
     version: 8.5.2
     repository: https://grafana.github.io/helm-charts
 
-  - name: cost-monitoring
+  - name: jupyterhub-cost-monitoring
     version: "0.0.1-set.by.chartpress"
-    repository: "file://../../../jupyterhub-cost-monitoring"
-    condition: cost-monitoring.enabled    
+    repository: "file://../../../jupyterhub-cost-monitoring/helm-charts"
+    condition: jupyterhub-cost-monitoring.enabled

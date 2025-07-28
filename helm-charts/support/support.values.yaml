@@ -33,5 +33,23 @@ grafana:
           isDefault: false
           editable: false
 
-cost-monitoring:
+jupyterhub-cost-monitoring:
   enabled: true
+  extraEnv:
+    - name: CLUSTER_NAME
+      value: openscapeshub
+    - name: AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: aws-access
+          key: AWS_ACCESS_KEY_ID
+    - name: AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: aws-access
+          key: AWS_SECRET_ACCESS_KEY
+
+  image:
+    repository: cost-monitoring
+    tag: "latest"
+    pullPolicy: Never
