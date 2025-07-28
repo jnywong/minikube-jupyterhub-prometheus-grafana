@@ -1,24 +1,27 @@
 # minikube-jupyterhub-prometheus-grafana
 
-Local development environment for minikube running JupyterHub, Prometheus and Grafana.
+Local development environment for minikube running JupyterHub, Prometheus and Grafana. Assumes platform used is [macOS with a Docker driver](https://minikube.sigs.k8s.io/docs/drivers/docker/).
 
 [Kubernetes on minikube (for learning and development only) — Zero to JupyterHub with Kubernetes  documentation](https://z2jh.jupyter.org/en/stable/kubernetes/minikube/step-zero-minikube.html)
 
 ## Create minikube cluster
 
-1. Check minikube context
+1. Start a minikube cluster with the following command:
 
 ```bash
-kubectl config current-context
+minikube start --driver=docker
 ```
 
+You may have to update environment variables with
+
 ```bash
-minikube start \
---kubernetes-version stable \
---nodes 1 \
---cpus 2 \
---memory 2000 \
---cni calico
+minikube -p minikube docker-env
+```
+
+and point your shell to use the minikube Docker daemon:
+
+```bash
+eval $(minikube -p minikube docker-env)
 ```
 
 To test that the cluster is running, run:
