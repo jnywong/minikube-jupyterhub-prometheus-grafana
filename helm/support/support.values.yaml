@@ -41,6 +41,29 @@ grafana:
     - yesoreyeram-infinity-datasource
 =======
 
+<<<<<<< HEAD:helm/support/support.values.yaml
 cost-monitoring:
   enabled: true
 >>>>>>> 485b324 (Local install of cost-monitoring):helm-charts/support/support.values.yaml
+=======
+jupyterhub-cost-monitoring:
+  enabled: true
+  extraEnv:
+    - name: CLUSTER_NAME
+      value: openscapeshub
+    - name: AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: aws-access
+          key: AWS_ACCESS_KEY_ID
+    - name: AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: aws-access
+          key: AWS_SECRET_ACCESS_KEY
+
+  image:
+    repository: cost-monitoring
+    tag: "latest"
+    pullPolicy: Never
+>>>>>>> ea5a1e3 (Add instructions for local dev):helm-charts/support/support.values.yaml
