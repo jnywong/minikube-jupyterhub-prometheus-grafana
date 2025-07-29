@@ -42,27 +42,27 @@ helm repo update
 1. Get the Prometheus helm chart
 
 ```bash
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add prometheus-community https://prometheus-community.github.io/helm
 helm repo update
 ```
 
 1. Get the Grafana helm chart
 
 ```bash
-helm repo add grafana https://grafana.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm
 helm repo update
 ```
 
 1. Update any on-disk dependencies if required
 
 ```bash
-helm dependency update ./helm-charts/<app/support>
+helm dependency update ./helm/<app/support>
 ```
 
 1. Fetch chart dependencies
 
 ```bash
-helm dep build ./helm-charts/<app/support>
+helm dep build ./helm/<app/support>
 ```
 
 ## Install a local development version of JupyterHub Cost Monitoring
@@ -95,17 +95,17 @@ docker build -t jupyterhub-cost-monitoring:<tag-name> .
 └── minikube-jupyterhub-prometheus-grafana
 ```
 
-and ensure that `minikube-jupyterhub-prometheus-grafana/helm-charts/support/Chart.yaml` has the following:
+and ensure that `minikube-jupyterhub-prometheus-grafana/helm/support/Chart.yaml` has the following:
 
 ```yaml
 dependencies:
   - name: jupyterhub-cost-monitoring
     version: "0.0.1-set.by.chartpress"
-    repository: "file://../../../jupyterhub-cost-monitoring/helm-charts"
+    repository: "file://../../../jupyterhub-cost-monitoring/helm/jupyterhub-cost-monitoring"
     condition: jupyterhub-cost-monitoring.enabled
 ```
 
-and that `minikube-jupyterhub-prometheus-grafana/helm-charts/support/values.yaml` has the following:
+and that `minikube-jupyterhub-prometheus-grafana/helm/support/values.yaml` has the following:
 
 ```yaml
 jupyterhub-cost-monitoring:
@@ -118,7 +118,7 @@ jupyterhub-cost-monitoring:
 1. Package a local helm chart archive of the `jupyterhub-cost-monitoring` chart directory with
 
 ```bash
-helm package ../jupyterhub-cost-monitoring/helm-charts --destination ./helm-charts/support/charts
+helm package ../jupyterhub-cost-monitoring/helm --destination ./helm/support/charts
 ```
 
 Remember to repeat this step if you make changes to the `jupyterhub-cost-monitoring` project.
@@ -146,7 +146,7 @@ helm repo add jupyterhub-cost-monitoring https://2i2c.org/jupyterhub-cost-monito
 helm repo update
 ```
 
-Make sure that the `Chart.yaml` file in the `helm-charts/support` directory has the following dependency:
+Make sure that the `Chart.yaml` file in the `helm/support` directory has the following dependency:
 
 ```yaml
 dependencies:
@@ -159,8 +159,8 @@ dependencies:
 Then install the chart with:
 
 ```bash
-helm dep up ./helm-charts/support
-helm dep build ./helm-charts/support
+helm dep up ./helm/support
+helm dep build ./helm/support
 ```
 
 before deploying the chart with the helper script `deployer.py`:
