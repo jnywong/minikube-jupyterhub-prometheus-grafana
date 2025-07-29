@@ -14,5 +14,5 @@ dependencies:
 
   - name: jupyterhub-cost-monitoring
     version: "0.0.1-set.by.chartpress"
-    repository: "file://../../../jupyterhub-cost-monitoring/helm-charts"
+    repository: "file://../../../jupyterhub-cost-monitoring/helm/jupyterhub-cost-monitoring"
     condition: jupyterhub-cost-monitoring.enabled
