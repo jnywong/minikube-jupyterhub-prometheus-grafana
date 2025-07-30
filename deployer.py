@@ -15,7 +15,7 @@ yaml = YAML(typ="safe", pure=True)
 
 def deploy(type, namespace, config, debug, dry_run):
     if type == "support" or type == "app":
-        helm_chart = Path(__file__).parent.joinpath(f"helm-charts/{type}")
+        helm_chart = Path(__file__).parent.joinpath(f"helm/{type}")
         cmd = [
             "helm",
             "upgrade",
@@ -51,7 +51,7 @@ def deploy(type, namespace, config, debug, dry_run):
             [
                 'sops',
                 'decrypt',
-                'helm-charts/support/enc-grafana-token.secret.yaml',
+                'helm/support/enc-grafana-token.secret.yaml',
             ],
             stdout=subprocess.PIPE,
         )
@@ -107,12 +107,12 @@ def main():
     args = parser.parse_args()
 
     if args.type == "support":
-        helm_chart = Path(__file__).parent.joinpath("helm-charts/support")
+        helm_chart = Path(__file__).parent.joinpath("helm/support")
         config = [
             helm_chart.joinpath(f"{args.namespace}.values.yaml"),
         ]
     elif args.type == "app":
-        helm_chart = Path(__file__).parent.joinpath("helm-charts/app")
+        helm_chart = Path(__file__).parent.joinpath("helm/app")
         config = [
             helm_chart.joinpath("app.values.yaml"),
         ]
