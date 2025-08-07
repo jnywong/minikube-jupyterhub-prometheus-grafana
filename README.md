@@ -113,6 +113,16 @@ jupyterhub-cost-monitoring:
   extraEnv:
     - name: CLUSTER_NAME
       value: "<name-of-cluster>"
+    - name: AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: aws-access
+          key: AWS_ACCESS_KEY_ID
+    - name: AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: aws-access
+          key: AWS_SECRET_ACCESS_KEY
 ```
 
 1. Package a local helm chart archive of the `jupyterhub-cost-monitoring` chart directory with
@@ -171,38 +181,16 @@ python3 deployer.py support --namespace=support
 
 ## Configure Grafana
 
-The default Grafana username and password is `admin`. You will be asked to change the password on first login.
-
-### Encrypt Grafana token with sops and age
-
-1. Temporarily save the Grafana token in a file called `grafana-token.secret.yaml`
-
-1. Use [age](https://age-encryption.org/) to generate a key with
-
-```bash
-age-keygen -o key.secret.txt
-```
-
-1. Encrypt `grafana-token.secret.yaml` with the key
-
-```bash
-sops encrypt --age <age-public-key> grafana-token.secret.yaml > enc-grafana-token.secret.yaml
-```
-
-This can be checked into version control.
-
-1. You can decrypt `enc-grafana-token.secret.yaml` by setting the environment variable `SOPS_AGE_KEY="<age-secret-key>"` and using the command
-
-```bash
-sops decrypt enc-grafana-token.secret.yaml
-```
+The default Grafana username and password is `admin`. You will be asked to change the password on first login, but you can skip that for local development.
 
 ### Deploy Grafana dashboards
 
-Ensure that you have set the environment variable `SOPS_AGE_KEY` to the age secret key in order to decrypt the Grafana token, or you can pass the file location of the `key.txt` file to `SOPS_AGE_KEY_FILE`.
+Ensure that you have set the environment variable `GRAFANA_TOKEN`, which you can generate from the Grafana UI under *Administration > Users and access > Service accounts*.
+
+Deploy the dashboard with
 
 ```bash
-python3 deployer.py grafana
+python3 deployer.py grafana --grafana_dashboards ../grafana-dashbords
 ```
 
 The deployer script assumes that the Grafana dashboards are served at [http://localhost:3000](http://localhost:3000).
