@@ -113,6 +113,16 @@ jupyterhub-cost-monitoring:
   extraEnv:
     - name: CLUSTER_NAME
       value: "<name-of-cluster>"
+    - name: AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: aws-access
+          key: AWS_ACCESS_KEY_ID
+    - name: AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: aws-access
+          key: AWS_SECRET_ACCESS_KEY
 ```
 
 1. Package a local helm chart archive of the `jupyterhub-cost-monitoring` chart directory with
