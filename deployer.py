@@ -45,28 +45,6 @@ def deploy(type, namespace, config, debug, dry_run):
         grafana_url = "http://localhost:3000"
         dashboards_dir = config
         deploy_env = os.environ.copy()
-        # sops_age_key = deploy_env.get("SOPS_AGE_KEY")  # FIX: decrypt sops key
-
-        p1 = subprocess.Popen(
-            [
-                'sops',
-                'decrypt',
-                'helm-charts/support/enc-grafana-token.secret.yaml',
-            ],
-            stdout=subprocess.PIPE,
-        )
-        p2 = subprocess.Popen(
-            [
-                'sed',
-                '-r',
-                's/(grafana_token: )//'
-            ],
-            stdin=p1.stdout,
-            stdout=subprocess.PIPE,
-        )
-        p1.stdout.close()
-        grafana_token = p2.communicate()[0].decode('utf-8').strip()
-        deploy_env.update({"GRAFANA_TOKEN": grafana_token})
 
         try:
             print(f"Deploying grafana dashboards to {grafana_url}...")
