@@ -32,3 +32,9 @@ grafana:
           access: proxy
           isDefault: false
           editable: false
+        - name: jupyterhub-cost-monitoring
+          type: yesoreyeram-infinity-datasource
+          isDefault: false
+          editable: true
+  plugins:
+    - yesoreyeram-infinity-datasource
