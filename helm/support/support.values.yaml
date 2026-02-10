@@ -54,8 +54,3 @@ jupyterhub-cost-monitoring:
         secretKeyRef:
           name: aws-access
           key: AWS_SECRET_ACCESS_KEY
-
-  image:
-    repository: cost-monitoring
-    tag: "latest"
-    pullPolicy: Never
