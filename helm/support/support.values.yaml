@@ -32,28 +32,13 @@ grafana:
           access: proxy
           isDefault: false
           editable: false
-<<<<<<< HEAD
-<<<<<<< HEAD:helm/support/support.values.yaml
-        - name: jupyterhub-cost-monitoring
-=======
         - name: yesoreyeram-infinity-datasource
->>>>>>> 8ebca52 (Add infinity datasource to Grafana)
           type: yesoreyeram-infinity-datasource
           isDefault: false
           editable: true
-
   plugins:
     - yesoreyeram-infinity-datasource
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 8ebca52 (Add infinity datasource to Grafana)
 
-<<<<<<< HEAD:helm/support/support.values.yaml
-cost-monitoring:
-  enabled: true
->>>>>>> 485b324 (Local install of cost-monitoring):helm-charts/support/support.values.yaml
-=======
 jupyterhub-cost-monitoring:
   enabled: true
   extraEnv:
@@ -71,7 +56,6 @@ jupyterhub-cost-monitoring:
           key: AWS_SECRET_ACCESS_KEY
 
   image:
-    repository: jupyterhub-cost-monitoring
+    repository: cost-monitoring
     tag: "latest"
     pullPolicy: Never
->>>>>>> ea5a1e3 (Add instructions for local dev):helm-charts/support/support.values.yaml
