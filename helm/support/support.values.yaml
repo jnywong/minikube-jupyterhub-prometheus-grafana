@@ -41,6 +41,7 @@ grafana:
           type: yesoreyeram-infinity-datasource
           isDefault: false
           editable: true
+
   plugins:
     - yesoreyeram-infinity-datasource
 <<<<<<< HEAD
@@ -70,7 +71,7 @@ jupyterhub-cost-monitoring:
           key: AWS_SECRET_ACCESS_KEY
 
   image:
-    repository: cost-monitoring
+    repository: jupyterhub-cost-monitoring
     tag: "latest"
     pullPolicy: Never
 >>>>>>> ea5a1e3 (Add instructions for local dev):helm-charts/support/support.values.yaml

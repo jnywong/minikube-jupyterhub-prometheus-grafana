@@ -128,7 +128,7 @@ jupyterhub-cost-monitoring:
 1. Package a local helm chart archive of the `jupyterhub-cost-monitoring` chart directory with
 
 ```bash
-helm package ../jupyterhub-cost-monitoring/helm --destination ./helm/support/charts
+helm package ../jupyterhub-cost-monitoring/helm/jupyterhub-cost-monitoring --destination ./helm/support/charts
 ```
 
 Remember to repeat this step if you make changes to the `jupyterhub-cost-monitoring` project.
